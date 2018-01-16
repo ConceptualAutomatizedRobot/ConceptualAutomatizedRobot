@@ -1,6 +1,17 @@
 # Dependencies
 
-None yet
+The sunfounder libraries are added as a submodule, you may either directly clone the whole project
+```
+git clone --recurse-submodules <url>
+```
+or you may first clone the project without submodules and later get the submodules
+```
+git clone <url>
+...
+git submodule init
+git submodule update
+```
+
 
 # Run
 
