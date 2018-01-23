@@ -6,28 +6,29 @@ class Camera:
     _cam = None
     _capture = None
 
-    def __init__(self, cam):
+    def __init__(self, cam, fps=None):
         self._cam = cam
         self._capture = cv.VideoCapture(self._cam)
+        if fps is not None:
+            self._capture.set(cv.CAP_PROP_FPS, fps)
 
     def __del__(self):
         self._capture.release()
 
-    def capture(self, wait=None):
-        if wait is not None:
-            time.sleep(wait)
+    def capture(self):
         ret, img = self._capture.read()
         if ret == True:
             return img
         else:
             return None
 
-    def iterate(self, wait=None, max_count=None):
+    def iterate(self, max_count=None):
         count = 0
         while max_count is None or count < max_count:
-            img = self.capture(wait)
+            img = self.capture()
             if img is not None:
-                yield ret
+                yield img
+                count += 1
             else:
                 raise StopIteration
 
@@ -36,21 +37,13 @@ if __name__ == '__main__':
     if len(argv) < 2:
         exit(-1)
     cam = Camera(argv[1])
-    img = cam.capture()
-    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    cv.imshow('frame', img)
-    cv.waitKey(10000)
-    cv.imshow('frame', gray)
-    cv.waitKey(5000)
 
-    cv.destroyAllWindows()
-
-    x = 0
-    for i in cam.iterate():
-        cv.imshow('frame', i)
-        print(x)
-        x += 1
-        cv.waitKey(5)
+    for img in cam.iterate():
+        cv.imshow('frame', img)
+        r = cv.waitKey(50)
+        if r == 113: # q
+            np.save('ref', img)
+            exit(0)
         
     cv.destroyAllWindows()
 
