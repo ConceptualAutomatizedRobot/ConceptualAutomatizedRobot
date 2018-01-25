@@ -81,10 +81,10 @@ if __name__ == '__main__':
     if argv[2] == 'haar':
         cl = BodyClassifier()
     elif argv[2] == 'homo':
-        ref = np.load('ref.npy')
+        ref = cv.imread('ref.png', cv.IMREAD_UNCHANGED)
         cl = HomoClassifier(ref)
         cv.imshow('ref', ref)
-        cv.waitKey(0)
+        cv.waitKey(1000)
         cv.destroyAllWindows()
     else:
         exit(-2)
