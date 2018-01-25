@@ -5,11 +5,8 @@ from camera import Camera
 class Classifier:
     def handle(self, img):
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        result = []
-        for lims in self._handle(gray, img):
-            result.append(lims)
 
-        return img, result
+        return img, list(self._handle(gray, img))
 
     def map(self, it):
         for img in it:
@@ -22,9 +19,7 @@ class BodyClassifier(Classifier):
         self._classifier = cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     def _handle(self, gray, img):
-        detected = self._classifier.detectMultiScale(gray, 1.3, 5)
-
-        for (x,y,w,h) in detected:
+        for (x,y,w,h) in self._classifier.detectMultiScale(gray, 1.3, 5):
             cv.rectangle(img, (x,y), (x+w, y+h), (255, 0, 0), 2)
             yield (x,y,w,h), (x+w/2, y+h/2)
 
