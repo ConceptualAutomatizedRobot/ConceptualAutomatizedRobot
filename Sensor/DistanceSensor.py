@@ -27,7 +27,7 @@ class DistanceSensor():
 		time.sleep(0.00001)
 		GPIO.output(self.Trig, False)
 
-		return mesuring()
+		return self.mesuring()
 
 	def cleanup(self):
 		GPIO.cleanup()
