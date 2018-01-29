@@ -13,7 +13,7 @@ class DistanceSensor():
 			:param echoPin: numero du pin corresspondant à l'echo
 			:param mod: mod d'addressage du bord soit en GPIO.BORD soit en GPIO.BCM
 		"""
-		GPIO.setmode(GPIO.BOARD) if mod == GPIO.BOARD else GPIO.setmode(GPIO.BCM)
+		GPIO.setmode(mod)
 		self.Trig = trigPin
 		self.Echo = echoPin
 

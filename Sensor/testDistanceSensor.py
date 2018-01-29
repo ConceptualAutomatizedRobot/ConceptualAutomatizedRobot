@@ -7,10 +7,6 @@ def main():
 	dSens = ds.DistanceSensor(25,24,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))
 	print("Echo "+str(dSens.Echo))
-	dSens.Trig = 22
-	dSens.Echo = 18
-	print(" Trig "+str(dSens.Trig))
-	print("Echo "+str(dSens.Echo))
 	print(dSens.getDistance())
 	dSens.cleanup()
 
