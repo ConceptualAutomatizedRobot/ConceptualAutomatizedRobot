@@ -4,7 +4,7 @@ import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
 	print("salut")
-	dSens = ds.DistanceSensor(25,24)
+	dSens = ds.DistanceSensor(25,24,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))
 	print("Echo "+str(dSens.Echo))
 	print(dSens.getDistance())
