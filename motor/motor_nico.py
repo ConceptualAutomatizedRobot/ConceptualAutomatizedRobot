@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#coding: utf-8
 import motor as m
 import car_dir as cd
 import time
@@ -11,6 +12,12 @@ class Motor:
     ############################################
     def stop(self):
         m.ctrl(0)
+    ############################################
+    # Change la vitesse du moteur
+    # speed : la vitesse
+    ############################################
+    def set_speed(self, speed):
+        m.setSpeed(speed)
     ############################################
     # Permet d'avancer
     # speed_percent : le pourcentage de vitesse
@@ -85,4 +92,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    #g6s7a5v30
