@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+from functools import reduce
 from camera import Camera
 
 class Classifier:
@@ -55,9 +56,7 @@ class HomoClassifier(Classifier):
                     dst = cv.perspectiveTransform(pts,M)
                     
                     dst = np.array(list(map(lambda x: x[0], dst)))
-                    centroid = (
-                        int(sum(map(lambda x: x[0], dst))/len(dst)),
-                        int(sum(map(lambda x: x[1], dst))/len(dst)))
+                    centroid = tuple(x/len(dst) for x in reduce(lambda x,y: (x[0]+y[0], x[1]+y[1]), dst, (0,0)))
                     
                     cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
                     cv.circle(img, centroid, 20, (0,255,0))
