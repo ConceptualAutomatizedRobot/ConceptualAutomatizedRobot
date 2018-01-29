@@ -8,10 +8,10 @@ def main():
 	print(" Echo "+str(dSens.Echo))
 	print(dSens.getDistance())
 
-	while(1):
+	"""while(1):
 		machin = raw_input(" Voulez vous une mesure -> 1 : ")
 		if machin == '1' :
-			print(dSens.mesuring())
+			print(dSens.mesuring())"""
 
 	dSens.cleanup()
 
