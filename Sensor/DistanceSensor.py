@@ -1,13 +1,21 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
 import RPi.GPIO as GPIO
 import time
 
 class DistanceSensor():
 	"""docstring for DistanceSensor"""
-	def __init__(self):
-		GPIO.setmode(GPIO.BOARD)
+	def __init__(self, trigPin = 40, echoPin = 38, mod = GPIO.BOARD):
+		""" Constructeur - Permet de crer un sonard 
 
-		self.Trig = 40
-		self.Echo = 38
+			:param trigPin: numero du pin corresspondant au triger
+			:param echoPin: numero du pin corresspondant à l'echo
+			:param mod: mod d'addressage du bord soit en GPIO.BORD soit en GPIO.BCM
+		"""
+		GPIO.setmode(GPIO.BOARD) if mod == GPIO.BOARD else GPIO.setmode(GPIO.BCM)
+		self.Trig = trigPin
+		self.Echo = echoPin
 
 		GPIO.setup(self.Trig,GPIO.OUT)
 		GPIO.setup(self.Echo,GPIO.IN)
