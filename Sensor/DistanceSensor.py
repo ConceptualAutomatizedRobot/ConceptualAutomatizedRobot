@@ -23,10 +23,7 @@ class DistanceSensor():
 		GPIO.output(self.Trig, False)
 
 	def getDistance(self):
-		GPIO.output(self.Trig, True)
-		time.sleep(0.00001)
-		GPIO.output(self.Trig, False)
-
+		self.trigerMesure()
 		return self.mesuring()
 
 	def cleanup(self):
@@ -46,3 +43,8 @@ class DistanceSensor():
 		distance = round((finImpulsion - debutImpulsion) * 340 * 100 / 2, 1)  ## Vitesse du son = 340 m/s
 
 		return distance
+
+	def trigerMesure(self):
+		GPIO.output(self.Trig, True)
+		time.sleep(0.00001)
+		GPIO.output(self.Trig, False)
