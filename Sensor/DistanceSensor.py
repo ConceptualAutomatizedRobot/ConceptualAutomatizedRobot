@@ -27,6 +27,16 @@ class DistanceSensor():
 		time.sleep(0.00001)
 		GPIO.output(self.Trig, False)
 
+		return mesuring()
+
+	def cleanup(self):
+		GPIO.cleanup()
+
+	def mesuring(self):
+		""" 
+			Fonction en attente d'un signal trigger afin d'effectuer la mesure 
+
+		"""
 		while GPIO.input(self.Echo)==0:  ## Emission de l'ultrason
 			debutImpulsion = time.time()
 
@@ -36,6 +46,3 @@ class DistanceSensor():
 		distance = round((finImpulsion - debutImpulsion) * 340 * 100 / 2, 1)  ## Vitesse du son = 340 m/s
 
 		return distance
-
-	def cleanup(self):
-		GPIO.cleanup()
