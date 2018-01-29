@@ -11,7 +11,7 @@ def main():
 	while(1):
 		machin = input(" Voulez vous une mesure -> 1")
 		if machin == "1" :
-			dSens.trigerMesure()
+			print(dSens.trigerMesure())
 
 	dSens.cleanup()
 
