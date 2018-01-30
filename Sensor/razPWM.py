@@ -3,7 +3,7 @@
 
 import PCA9685 as servo
 import sys
-sys.path.insert(0, '../sunfounder/Sunfounder_Smart_Video_Car_Kit_for_RaspberryPi/server')
+sys.path.insert(0, '../sunfounder/server')
 sHori  = 14 # Servo moteur Camera Horizontale
 sVerti = 15 # Servo moteur Camera Verticale
 sRoue  = 0  # Servo moteur Roue
