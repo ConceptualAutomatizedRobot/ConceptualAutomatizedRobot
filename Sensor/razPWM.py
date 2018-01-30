@@ -22,6 +22,7 @@ def raz():
 
 
 def main():
+	setup()
 	raz()
 	
 
