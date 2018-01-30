@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # coding: utf-8	
 
-import PCA9685 as servo
 import sys
 sys.path.insert(0, '../sunfounder/server')
+import PCA9685 as servo
 sHori  = 14 # Servo moteur Camera Horizontale
 sVerti = 15 # Servo moteur Camera Verticale
 sRoue  = 0  # Servo moteur Roue
