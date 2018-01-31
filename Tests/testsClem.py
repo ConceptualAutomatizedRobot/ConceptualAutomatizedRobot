@@ -38,5 +38,6 @@ if __name__ == '__main__':
 
 	motor.setSpeed(100)
 
+	test_forward(motor,car_dir, 2)
 	# test_burn(motor, car_dir)
-	test_forward_for(motor, car_dir, wheel_sensor, 150)
+	#test_forward_for(motor, car_dir, wheel_sensor, 150)
