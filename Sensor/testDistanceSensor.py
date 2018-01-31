@@ -3,11 +3,20 @@
 import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
-	GPIO.setmode(GPIO.BOARD)
-	GPIO.setup(12, GPIO.OUT)
-	p=GPIO.PWM(12, 20)
+	
+	try:
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(12, GPIO.OUT)
+		p=GPIO.PWM(12, 20)
 
-	p.start(1)
+		p.start(1)
+	except KeyboardInterrupt:
+		print(" Exiting program")
+	except:
+		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
+	finally:
+		GPIO.cleanup()
+
 	"""dSens = ds.DistanceSensor(16,18,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))
 	print(" Echo "+str(dSens.Echo))
