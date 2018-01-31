@@ -7,6 +7,7 @@ import time
 class DistanceSensor():
 	"""docstring for DistanceSensor"""
 	def __init__(self, trigPin = 40, echoPin = 38, mod = GPIO.BOARD):
+		GPIO.cleanup()
 		""" Constructeur - Permet de crer un sonard 
 
 			:param trigPin: numero du pin corresspondant au triger
