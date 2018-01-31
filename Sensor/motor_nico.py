@@ -18,7 +18,9 @@ class Motor:
         Motor0_B = 16  # pin16 modification du pin car ona besoin du 12
         Motor1_A = 13  # pin13
         Motor1_B = 15  # pin15
+        print(m.pins)
         m.pins = [Motor0_A, Motor0_B, Motor1_A, Motor1_B]
+        print(m.pins)
         m.setup() #Have to be done
     ############################################
     # Permet de stoper le vehicule
