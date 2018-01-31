@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 #coding: utf-8
+import sys
+sys.path.insert(0, '../sunfounder/server')
+
+
+
+
 import motor as m
 import car_dir as cd
 import time
