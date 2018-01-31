@@ -3,8 +3,9 @@
 import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
-	GPIO.setmode(GPIO.BCM)
-	p=GPIO.PWM(16, 1)
+	GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(12, GPIO.OUT)
+	p=GPIO.PWM(12, 1)
 	p.start(1)
 	"""dSens = ds.DistanceSensor(16,18,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))
