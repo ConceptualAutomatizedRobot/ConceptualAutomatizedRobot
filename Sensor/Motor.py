@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import sys
+sys.path.insert(0, '../sunfounder/server')
 import RPi.GPIO as GPIO
 import PCA9685 as p
 import time    # Import necessary modules
