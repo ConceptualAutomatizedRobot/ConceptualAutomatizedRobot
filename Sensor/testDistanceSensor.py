@@ -17,6 +17,7 @@ def main():
 		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
 	finally:
 		GPIO.cleanup()
+		p.stop()
 
 	"""dSens = ds.DistanceSensor(16,18,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))
