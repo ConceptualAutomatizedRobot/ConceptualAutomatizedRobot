@@ -40,7 +40,7 @@ class DistanceSensor():
 		debutImpulsion = time.time()
 
 		#while GPIO.input(self.Echo)==1:   ## Retour de l'Echo
-		GPIO.add_event_detect(self.Echo, GPIO.FAILLING)
+		GPIO.add_event_detect(self.Echo, GPIO.FALLING)
 		finImpulsion = time.time()
 
 		distance = round((finImpulsion - debutImpulsion) * 340 * 100 / 2, 1)  ## Vitesse du son = 340 m/s
