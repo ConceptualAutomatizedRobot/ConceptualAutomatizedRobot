@@ -35,11 +35,13 @@ class DistanceSensor():
 			Fonction en attente d'un signal trigger afin d'effectuer la mesure 
 
 		"""
-		while GPIO.input(self.Echo)==0:  ## Emission de l'ultrason
-			debutImpulsion = time.time()
+		#while GPIO.input(self.Echo)==0:  ## Emission de l'ultrason
+		GPIO.add_event_detect(self.Echo, GPIO.RISING)
+		debutImpulsion = time.time()
 
-		while GPIO.input(self.Echo)==1:   ## Retour de l'Echo
-			finImpulsion = time.time()
+		#while GPIO.input(self.Echo)==1:   ## Retour de l'Echo
+		GPIO.add_event_detect(self.Echo, GPIO.FAILLING)
+		finImpulsion = time.time()
 
 		distance = round((finImpulsion - debutImpulsion) * 340 * 100 / 2, 1)  ## Vitesse du son = 340 m/s
 
