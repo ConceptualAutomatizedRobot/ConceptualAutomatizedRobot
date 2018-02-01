@@ -4,7 +4,7 @@ import sys
 import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
-	dSens = ds.DistanceSensor(16,18,GPIO.BCM)
+	dSens = ds.DistanceSensor(12,18,GPIO.BOARD)
 	try:
 		while(1):
 			print(dSens.mesuring())

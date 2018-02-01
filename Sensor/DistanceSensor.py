@@ -9,7 +9,7 @@ class DistanceSensor():
 	def __init__(self, trigPin = 40, echoPin = 38, mod = GPIO.BOARD):
 		""" Constructeur - Permet de crer un sonard 
 
-			:param trigPin: numero du pin corresspondant au triger
+			:param trigPin: numero du pin corresspondant au triger -1 if the triger isn't set by this class
 			:param echoPin: numero du pin corresspondant à l'echo
 			:param mod: mod d'addressage du bord soit en GPIO.BORD soit en GPIO.BCM
 		"""
