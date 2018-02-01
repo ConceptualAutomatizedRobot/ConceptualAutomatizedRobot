@@ -7,8 +7,8 @@ def main():
 	try:
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(12, GPIO.OUT)
-		
-		p=GPIO.PWM(12, 50)
+
+		p=GPIO.PWM(12, 1)
 
 		p.start(1)
 	except KeyboardInterrupt:
