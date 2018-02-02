@@ -33,13 +33,15 @@ class DistanceSensor():
 	def mesuring(self):
 		""" 
 			Fonction en attente d'un signal trigger afin d'effectuer la mesure 
-
+	
 		"""
-		#while GPIO.input(self.Echo)==0:  ## Emission de l'ultrason
+		## Emission de l'ultrason
+		#while GPIO.input(self.Echo)==0:  
 		GPIO.wait_for_edge(self.Echo, GPIO.RISING)
 		debutImpulsion = time.time()
 
-		#while GPIO.input(self.Echo)==1:   ## Retour de l'Echo
+		## Retour de l'Echo
+		#while GPIO.input(self.Echo)==1:   
 		GPIO.wait_for_edge(self.Echo, GPIO.FALLING)
 		finImpulsion = time.time()
 
@@ -51,3 +53,27 @@ class DistanceSensor():
 		GPIO.output(self.Trig, True)
 		time.sleep(0.00001)
 		GPIO.output(self.Trig, False)
+
+	def trigerMesurePWM(self, dc = 1, freq = 1):
+		"""
+			Utiliser cette fonction pour déclancher une mesure par le bié de la pin 12
+			du raspberry pi 3 qui elle seule peut générer un signale PWM
+			Pour cela il faut brancher le triger du sonard sur le pin 12
+			
+			:param dc: Duty cyce ( 0.0 <= dc <= 100.0)
+			:param freq: Frequence du pwm
+		"""
+		try:
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(12, GPIO.OUT)
+
+			p=GPIO.PWM(12, 20)
+
+			p.start(dc)
+		except KeyboardInterrupt:
+			print(" Exiting program")
+		except:
+			print(" Other exception detected\n"+str(sys.exc_info()[0]) )
+		finally:
+			GPIO.cleanup()
+			p.stop()
