@@ -69,7 +69,7 @@ class DistanceSensor():
 			"""
 			pass
 
-	def trigerMesurePWM(seflf, dc = 1, freq = 1):
+	def trigerMesurePWM(self, dc = 1, freq = 1):
 		"""
 			Utiliser cette fonction pour déclancher une mesure par le bié de la pin 12
 			du raspberry pi 3 qui elle seule peut générer un signale PWM
