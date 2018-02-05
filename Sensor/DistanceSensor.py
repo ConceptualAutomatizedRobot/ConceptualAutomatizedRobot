@@ -66,6 +66,7 @@ class DistanceSensor():
 				afin qu'elle effecue le nombre de mesusre souhaité
 				:param nbMesurePerSecond: Nombre de mesure à effectuer par secondes
 			"""
+			pass
 
 	def trigerMesurePWM(self, dc = 1, freq = 1):
 		"""
