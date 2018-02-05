@@ -2,16 +2,17 @@ import cv2 as cv
 import numpy as np
 from functools import reduce
 from camera import Camera
+import pyzbar.pyzbar as zbar
 
 class Classifier:
-    def handle(self, img):
+    def handle(self, img, draw=False):
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-        return img, list(self._handle(gray, img))
+        return img, list(self._handle(gray, img, draw))
 
-    def map(self, it):
+    def map(self, it, draw=False):
         for img in it:
-            yield self.handle(img)
+            yield self.handle(img, draw)
 
 class BodyClassifier(Classifier):
     _classifier = None
@@ -19,7 +20,7 @@ class BodyClassifier(Classifier):
         #self._classifier = cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_lowerbody.xml')
         self._classifier = cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-    def _handle(self, gray, img):
+    def _handle(self, gray, img, draw):
         for (x,y,w,h) in self._classifier.detectMultiScale(gray, 1.3, 5):
             cv.rectangle(img, (x,y), (x+w, y+h), (255, 0, 0), 2)
             yield (x,y,w,h), (x+w/2, y+h/2)
@@ -35,7 +36,7 @@ class HomoClassifier(Classifier):
         self._search_params = dict(checks = 50)
         self._flann = cv.FlannBasedMatcher(self._index_params, self._search_params)
 
-    def _handle(self, gray, img):
+    def _handle(self, gray, img, draw):
         kp, des = self._sift.detectAndCompute(gray, None)
         if len(kp) > 2 and len(self._kp) > 2:
             matches = self._flann.knnMatch(self._des, des, k=2)
@@ -56,12 +57,24 @@ class HomoClassifier(Classifier):
                     dst = cv.perspectiveTransform(pts,M)
                     
                     dst = np.array(list(map(lambda x: x[0], dst)))
-                    centroid = tuple(x/len(dst) for x in reduce(lambda x,y: (x[0]+y[0], x[1]+y[1]), dst, (0,0)))
+                    centroid = tuple(int(x/len(dst)) for x in reduce(lambda x,y: (x[0]+y[0], x[1]+y[1]), dst, (0,0)))
+                    min_x = min(map(lambda x: int(x[0]), dst))
+                    max_x = max(map(lambda x: int(x[0]), dst))
+                    min_y = min(map(lambda x: int(x[1]), dst))
+                    max_y = max(map(lambda x: int(x[1]), dst))
                     
-                    cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
-                    cv.circle(img, centroid, 20, (0,255,0))
+                    max_x = min(max_x, gray.shape[1])
+                    max_y = min(max_y, gray.shape[0])
+                    min_x = max(min_x, 0)
+                    min_y = max(min_y, 0)
+                    sub = gray[min_y:max_y+1,min_x:max_x+1]
+                    decoded = zbar.decode(sub, [zbar.ZBarSymbol.QRCODE])
+                    if draw:
+	                    cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
+	                    cv.circle(img, centroid, 20, (0,255,0))
 
-                    yield dst,centroid
+
+                    yield dst,centroid,decoded
 
 if __name__ == '__main__':
     from sys import argv, exit
@@ -83,6 +96,7 @@ if __name__ == '__main__':
     else:
         exit(-2)
 
-    for x,y in cl.map(cam.iterate()):
+    for x,y in cl.map(cam.iterate(), True):
         cv.imshow('frame', x)
+        print(y)
         cv.waitKey(1)
