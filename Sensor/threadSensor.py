@@ -16,7 +16,7 @@ def main():
 	finally:
 		dSens.cleanup()"""
 	dSens.trigerMesurePWM()
-		while(1):
-			print(dSens.mesuring())
+	while(1):
+		print(dSens.mesuring())
 if __name__ =='__main__':
 	main()
