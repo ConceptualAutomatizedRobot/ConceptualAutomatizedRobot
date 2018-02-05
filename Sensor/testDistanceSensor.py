@@ -12,7 +12,7 @@ def main():
 		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
 	finally:
 		GPIO.cleanup()
-		p.stop()
+		dSens.stopMesurePwm()
 
 	"""try:
 		GPIO.setmode(GPIO.BOARD)

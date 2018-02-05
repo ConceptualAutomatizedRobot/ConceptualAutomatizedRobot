@@ -77,18 +77,21 @@ class DistanceSensor():
 			:param dc: Duty cyce ( 0.0 <= dc <= 100.0)
 			:param freq: Frequence du pwm
 		"""
-		try:
+		#try:
 			#GPIO.setmode(GPIO.BOARD)
 			#GPIO.setup(self.Trig, GPIO.OUT)
 
-			p=GPIO.PWM(self.Trig, freq)
+			self.p=GPIO.PWM(self.Trig, freq)
 
-			p.start(dc)
+			self.p.start(dc)
 			print(" Triger Setted ")
-		except KeyboardInterrupt:
+		"""except KeyboardInterrupt:
 			print(" Exiting program")
 		except:
 			print(" Other exception detected\n"+str(sys.exc_info()[0]) )
 		finally:
 			GPIO.cleanup()
-			p.stop()
+			p.stop()"""
+
+	def stopMesurePwm(self):
+			self.stop()
