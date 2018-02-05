@@ -81,10 +81,10 @@ class DistanceSensor():
 			#GPIO.setmode(GPIO.BOARD)
 			#GPIO.setup(self.Trig, GPIO.OUT)
 
-			self.p=GPIO.PWM(self.Trig, freq)
+		self.p=GPIO.PWM(self.Trig, freq)
 
-			self.p.start(dc)
-			print(" Triger Setted ")
+		self.p.start(dc)
+		print(" Triger Setted ")
 		"""except KeyboardInterrupt:
 			print(" Exiting program")
 		except:
