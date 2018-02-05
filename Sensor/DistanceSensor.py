@@ -17,6 +17,7 @@ class DistanceSensor():
 		GPIO.setmode(mod)
 		self.Trig = trigPin
 		self.Echo = echoPin
+		self.mod  = mod
 
 		GPIO.setup(self.Trig,GPIO.OUT)
 		GPIO.setup(self.Echo,GPIO.IN)
@@ -35,6 +36,7 @@ class DistanceSensor():
 			Fonction en attente d'un signal trigger afin d'effectuer la mesure 
 	
 		"""
+		GPIO.setmode(self.mod)
 		## Emission de l'ultrason
 		#while GPIO.input(self.Echo)==0:  
 		GPIO.wait_for_edge(self.Echo, GPIO.RISING)
