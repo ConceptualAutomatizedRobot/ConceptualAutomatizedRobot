@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 def main():
 	
 	dSens = ds.DistanceSensor(12,18)
-	dSens.trigerMesurePWM(freq=100)
+	dSens.trigerMesurePWM(freq=0.2)
 
 	"""try:
 		GPIO.setmode(GPIO.BOARD)
