@@ -7,7 +7,7 @@ def main():
 	dSens = ds.DistanceSensor(12,18)
 	try:
 		while(1):
-			print(dSens.mesuring())
+			dSens.mesuring()
 	except KeyboardInterrupt:
 		print(" Exiting program")
 	except:
