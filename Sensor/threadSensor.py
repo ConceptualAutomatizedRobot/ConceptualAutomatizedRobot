@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 def main():
 	dSens = ds.DistanceSensor(12,18)
 	try:
+		dSens.trigerMesurePWM()
 		while(1):
 			print(dSens.mesuring())
 	except KeyboardInterrupt:

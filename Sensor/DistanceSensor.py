@@ -45,6 +45,9 @@ class DistanceSensor():
 		GPIO.wait_for_edge(self.Echo, GPIO.FALLING)
 		finImpulsion = time.time()
 
+
+		
+
 		distance = round((finImpulsion - debutImpulsion) * 340 * 100 / 2, 1)  ## Vitesse du son = 340 m/s
 
 		return distance
@@ -65,9 +68,9 @@ class DistanceSensor():
 		"""
 		try:
 			GPIO.setmode(GPIO.BOARD)
-			GPIO.setup(12, GPIO.OUT)
+			GPIO.setup(self.Trig, GPIO.OUT)
 
-			p=GPIO.PWM(12, 20)
+			p=GPIO.PWM(self.Trig, freq)
 
 			p.start(dc)
 		except KeyboardInterrupt:
