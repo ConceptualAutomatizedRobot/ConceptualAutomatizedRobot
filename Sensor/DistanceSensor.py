@@ -69,8 +69,8 @@ class DistanceSensor():
 			:param freq: Frequence du pwm
 		"""
 		try:
-			GPIO.setmode(GPIO.BOARD)
-			GPIO.setup(self.Trig, GPIO.OUT)
+			#GPIO.setmode(GPIO.BOARD)
+			#GPIO.setup(self.Trig, GPIO.OUT)
 
 			p=GPIO.PWM(self.Trig, freq)
 
