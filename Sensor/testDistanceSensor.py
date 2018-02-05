@@ -4,7 +4,10 @@ import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
 	
-	try:
+	dSens = ds.DistanceSensor(12,18)
+	dSens.trigerMesurePWM()
+	
+	"""try:
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setup(12, GPIO.OUT)
 
@@ -17,7 +20,7 @@ def main():
 		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
 	finally:
 		GPIO.cleanup()
-		p.stop()
+		p.stop()"""
 
 	"""dSens = ds.DistanceSensor(16,18,GPIO.BCM)
 	print(" Trig "+str(dSens.Trig))

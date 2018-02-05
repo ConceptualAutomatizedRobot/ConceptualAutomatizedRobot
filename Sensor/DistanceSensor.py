@@ -59,6 +59,14 @@ class DistanceSensor():
 		time.sleep(0.00001)
 		GPIO.output(self.Trig, False)
 
+
+	def trigerMesurePWMmesurPerSeconds(self, nbMesurePerSecond):
+			""" 
+				Permet de configurer une pin en pwm 
+				afin qu'elle effecue le nombre de mesusre souhaité
+				:param nbMesurePerSecond: Nombre de mesure à effectuer par secondes
+			"""
+
 	def trigerMesurePWM(self, dc = 1, freq = 1):
 		"""
 			Utiliser cette fonction pour déclancher une mesure par le bié de la pin 12
@@ -69,8 +77,8 @@ class DistanceSensor():
 			:param freq: Frequence du pwm
 		"""
 		try:
-			#GPIO.setmode(GPIO.BOARD)
-			#GPIO.setup(self.Trig, GPIO.OUT)
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(self.Trig, GPIO.OUT)
 
 			p=GPIO.PWM(self.Trig, freq)
 
