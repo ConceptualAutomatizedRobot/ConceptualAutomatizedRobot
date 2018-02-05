@@ -94,4 +94,4 @@ class DistanceSensor():
 			p.stop()"""
 
 	def stopMesurePwm(self):
-			self.stop()
+		self.stop()
