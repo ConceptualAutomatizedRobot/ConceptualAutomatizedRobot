@@ -3,9 +3,16 @@
 import DistanceSensor as ds
 import RPi.GPIO as GPIO
 def main():
-	
-	dSens = ds.DistanceSensor(12,18)
-	dSens.trigerMesurePWM(freq=0.2)
+	try:
+		dSens = ds.DistanceSensor(12,18)
+		dSens.trigerMesurePWM(freq=0.2)
+	except KeyboardInterrupt:
+		print(" Exiting program")
+	except:
+		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
+	finally:
+		GPIO.cleanup()
+		p.stop()
 
 	"""try:
 		GPIO.setmode(GPIO.BOARD)
