@@ -14,8 +14,8 @@ class Camera:
         if resolution is not None:
             w = self._capture.get(cv.CAP_PROP_FRAME_WIDTH)
             h = self._capture.get(cv.CAP_PROP_FRAME_HEIGHT)
-            self._capture.set(cv.CAP_PROP_FRAME_WIDTH, w*resolution)
-            self._capture.set(cv.CAP_PROP_FRAME_HEIGHT, h*resolution)
+            self._capture.set(cv.CAP_PROP_FRAME_WIDTH, int(w*resolution))
+            self._capture.set(cv.CAP_PROP_FRAME_HEIGHT, int(h*resolution))
 
 
     def __del__(self):
