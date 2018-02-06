@@ -67,14 +67,22 @@ class HomoClassifier(Classifier):
                     max_y = min(max_y, gray.shape[0])
                     min_x = max(min_x, 0)
                     min_y = max(min_y, 0)
-                    sub = gray[min_y:max_y+1,min_x:max_x+1]
-                    decoded = zbar.decode(sub, symbols=[zbar.ZBarSymbol.QRCODE])
+                    #roi = gray[min_y:max_y+1,min_x:max_x+1]
+                    #decoded = zbar.decode(roi, symbols=[zbar.ZBarSymbol.QRCODE])
+                    decoded = None
                     if draw:
 	                    cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
 	                    cv.circle(img, centroid, 20, (0,255,0))
 
 
                     yield dst,centroid,decoded
+
+class ContourClassifier
+	def __init__(self):
+		pass
+
+	def _handle(self, gray, img, draw):
+		pass
 
 if __name__ == '__main__':
     from sys import argv, exit
