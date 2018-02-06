@@ -48,21 +48,21 @@ class HomoClassifier(Classifier):
             if len(good) > 10:
                 src_pts = np.float32([ self._kp[m.queryIdx].pt for m in good]).reshape(-1, 1, 2)
                 dst_pts = np.float32([ kp[m.trainIdx].pt for m in good]).reshape(-1, 1, 2)
-                
+
                 M, mask = cv.findHomography(src_pts, dst_pts, cv.RANSAC, 5.0)
                 matchesMask = mask.ravel().tolist()
                 if M is not None:
                     h,w = self._ref.shape
                     pts = np.float32([ [0,0],[0,h-1],[w-1,h-1],[w-1,0] ]).reshape(-1,1,2)
                     dst = cv.perspectiveTransform(pts,M)
-                    
+
                     dst = np.array(list(map(lambda x: x[0], dst)))
                     centroid = tuple(int(x/len(dst)) for x in reduce(lambda x,y: (x[0]+y[0], x[1]+y[1]), dst, (0,0)))
                     min_x = min(map(lambda x: int(x[0]), dst))
                     max_x = max(map(lambda x: int(x[0]), dst))
                     min_y = min(map(lambda x: int(x[1]), dst))
                     max_y = max(map(lambda x: int(x[1]), dst))
-                    
+
                     max_x = min(max_x, gray.shape[1])
                     max_y = min(max_y, gray.shape[0])
                     min_x = max(min_x, 0)
@@ -71,40 +71,56 @@ class HomoClassifier(Classifier):
                     #decoded = zbar.decode(roi, symbols=[zbar.ZBarSymbol.QRCODE])
                     decoded = None
                     if draw:
-	                    cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
-	                    cv.circle(img, centroid, 20, (0,255,0))
+                        cv.polylines(img,[np.int32(dst)],True,(0,255,0),3, cv.LINE_AA)
+                        cv.circle(img, centroid, 20, (0,255,0))
 
 
                     yield dst,centroid,decoded
 
 class ContourClassifier
-	def __init__(self):
-		pass
+    def __init__(self):
+        pass
 
-	def _handle(self, gray, img, draw):
-		pass
+    def _handle(self, gray, img, draw):
+        pass
 
 if __name__ == '__main__':
     from sys import argv, exit
     import time
+    import argparse
 
-    if len(argv) < 3:
-        exit(-1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--video', required=True)
 
+    show = parser.add_mutually_exclusive_group()
+    show.add_argument('--noshow', action='store_false', dest='show')
+    show.add_argument('--show', action='store_false', dest='show')
 
-    cam = Camera(argv[1], fps=0.5)
-    if argv[2] == 'haar':
+    classifiers = parser.add_mutually_exclusive_group(required=True)
+    classifiers.add_argument('--body', action='store_const', const='body', dest='classifier')
+    classifiers.add_argument('--homo', action='store_const', const='homo', dest='classifier')
+    classifiers.add_argument('--contour', action='store_const', const='contour', dest='classifier')
+
+    parser.add_argument('--resolution', type=float)
+
+    args = parser.parse_args()
+
+    cam = Camera(args.video, resolution=resolution)
+    if args.classifier == 'body'
         cl = BodyClassifier()
-    elif argv[2] == 'homo':
+    elif args.classifier == 'homo':
         ref = cv.imread('ref.png', cv.IMREAD_UNCHANGED)
         cl = HomoClassifier(ref)
         cv.imshow('ref', ref)
         cv.waitKey(1000)
         cv.destroyAllWindows()
+    elif args.classifier == 'contour':
+        cl = ContourClassifier()
     else:
         exit(-2)
 
-    for x,y in cl.map(cam.iterate(), True):
-        cv.imshow('frame', x)
+    for x,y in cl.map(cam.iterate(), args.show):
+        if args.show:
+            cv.imshow('frame', x)
         print(y)
         cv.waitKey(1)
