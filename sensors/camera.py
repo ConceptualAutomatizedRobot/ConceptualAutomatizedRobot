@@ -6,11 +6,17 @@ class Camera:
     _cam = None
     _capture = None
 
-    def __init__(self, cam, fps=None):
+    def __init__(self, cam, fps=None, resolution=None):
         self._cam = cam
         self._capture = cv.VideoCapture(self._cam)
         if fps is not None:
             self._capture.set(cv.CAP_PROP_FPS, fps)
+        if resolution is not None:
+            w = self._capture.get(cv.CAP_PROP_FRAME_WIDTH)
+            h = self._capture.get(cv.CAP_PROP_FRAME_HEIGHT)
+            self._capture.set(cv.CAP_PROP_FRAME_WIDTH, w*resolution)
+            self._capture.set(cv.CAP_PROP_FRAME_HEIGHT, h*resolution)
+
 
     def __del__(self):
         self._capture.release()
