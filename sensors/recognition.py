@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 from functools import reduce
 from camera import Camera
-import pyzbar.pyzbar as zbar
+#import pyzbar.pyzbar as zbar
 
 class Classifier:
     def handle(self, img, draw=False):
@@ -77,12 +77,46 @@ class HomoClassifier(Classifier):
 
                     yield dst,centroid,decoded
 
-class ContourClassifier
+def children(i, hierarchy):
+    curr = hierarchy[i][2]
+    while curr != -1:
+        yield curr
+        curr = hierarchy[curr][0]
+
+def is_mark(i, hierarchy):
+    curr = i
+    depth = 0
+    while (hierarchy[curr][2] != -1):
+        curr = hierarchy[curr][2]
+        depth += 1
+    if (hierarchy[curr][2] != -1):
+        depth += 1
+    return depth == 5
+
+class ContourClassifier(Classifier):
     def __init__(self):
         pass
 
     def _handle(self, gray, img, draw):
-        pass
+        edges = cv.Canny(gray, 100, 200)
+        cntimg, cnt, hierarchy = cv.findContours(edges, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+
+        if hierarchy is not None:
+            hierarchy = hierarchy[0]
+            #print(cnt)
+            marks = []
+            for i,h in enumerate(cnt):
+            #h = [next, previous, child, parent]
+                for c in children(i, hierarchy):
+                      if is_mark(c, hierarchy):
+                        marks.append(i)
+            if len(marks) > 0:
+                print(marks)
+            if draw:
+                for m in marks:
+                    cv.drawContours(img, cnt, m, (0,255,0), 3)
+        
+        yield None
 
 if __name__ == '__main__':
     from sys import argv, exit
@@ -94,7 +128,7 @@ if __name__ == '__main__':
 
     show = parser.add_mutually_exclusive_group()
     show.add_argument('--noshow', action='store_false', dest='show')
-    show.add_argument('--show', action='store_false', dest='show')
+    show.add_argument('--show', action='store_true', dest='show', default=True)
 
     classifiers = parser.add_mutually_exclusive_group(required=True)
     classifiers.add_argument('--body', action='store_const', const='body', dest='classifier')
@@ -105,8 +139,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    cam = Camera(args.video, resolution=resolution)
-    if args.classifier == 'body'
+    cam = Camera(args.video, resolution=args.resolution, fps=10)
+    if args.classifier == 'body':
         cl = BodyClassifier()
     elif args.classifier == 'homo':
         ref = cv.imread('ref.png', cv.IMREAD_UNCHANGED)
