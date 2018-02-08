@@ -96,3 +96,22 @@ class DistanceSensor():
 
 	def stopMesurePwm(self):
 		self.p.stop()
+
+
+def main():
+	dSens = DistanceSensor(12,18)
+	dSens.trigerMesurePWM()
+	try:
+		while(1):
+			dSens.mesuring()
+	except KeyboardInterrupt:
+		print(" Exiting program")
+	except:
+		print(" Other exception detected\n"+str(sys.exc_info()[0]) )
+	finally:
+		dSens.cleanup()
+	"""dSens.trigerMesurePWM()
+	while(1):
+		print(dSens.mesuring())"""
+if __name__ =='__main__':
+	main()
