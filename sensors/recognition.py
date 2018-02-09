@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 from functools import reduce
 from camera import Camera
-#import pyzbar.pyzbar as zbar
+import pyzbar.pyzbar as zbar
 
 class Classifier:
     def handle(self, img, draw=False):
