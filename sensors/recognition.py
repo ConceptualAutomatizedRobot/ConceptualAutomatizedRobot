@@ -3,6 +3,7 @@ import numpy as np
 from functools import reduce
 from camera import Camera
 import pyzbar.pyzbar as zbar
+import random
 
 class Classifier:
     def handle(self, img, draw=False):
@@ -161,38 +162,39 @@ class SlidingClassifier(Classifier):
 class SplittingClassifier(Classifier):
     def _handle(self, gray, img, bw, draw):
         decoded = zbar.decode(bw, symbols=[zbar.ZBarSymbol.QRCODE])
-        h,w = bw.shape
-        left = bw[:,:int(w/2)]
-        right = bw[:,int(w/2):]
-        top = bw[:int(h/2),:]
-        bottom = bw[int(h/2):,:]
-        ltest = zbar.decode(left, symbols=[zbar.ZBarSymbol.QRCODE])
-        rtest = zbar.decode(right, symbols=[zbar.ZBarSymbol.QRCODE])
-        ttest = zbar.decode(top, symbols=[zbar.ZBarSymbol.QRCODE])
-        btest = zbar.decode(bottom, symbols=[zbar.ZBarSymbol.QRCODE])
-        #if draw:
-            #cv.rectangle(img, (0,0), (int(w/2),h), (255,0,0), 2)
-            #cv.rectangle(img, (int(w/2), 0), (w,h), (0,255,0), 2)
-        for code in decoded:
-            if code in ltest and not code in rtest:
-                lr = -1
-            elif code not in ltest and code in rtest:
-                lr = 1
-            else:
-                lr = 0
-            if code in ttest and not code in btest:
-                tb = 1
-            elif code not in ttest and code in btest:
-                tb = -1
-            else:
-                tb = 0
-            yield lr,tb,code
-            #if code in ltest and code not in rtest:
-                #yield (0,0,int(w/2),h), (int(w/4),int(h/2)), code
-            #elif code not in ltest and code in rtest:
-                #yield (int(w/2), 0, int(w/2),h), (int(3*w/4), int(h/2)), code
-            #else:
-                #yield (0,0,w,h), (int(w/2), int(h/2)), code
+        if len(decoded) > 0:
+            h,w = bw.shape
+            left = bw[:,:int(w/2)]
+            right = bw[:,int(w/2):]
+            top = bw[:int(h/2),:]
+            bottom = bw[int(h/2):,:]
+            ltest = zbar.decode(left, symbols=[zbar.ZBarSymbol.QRCODE])
+            rtest = zbar.decode(right, symbols=[zbar.ZBarSymbol.QRCODE])
+            ttest = zbar.decode(top, symbols=[zbar.ZBarSymbol.QRCODE])
+            btest = zbar.decode(bottom, symbols=[zbar.ZBarSymbol.QRCODE])
+            #if draw:
+                #cv.rectangle(img, (0,0), (int(w/2),h), (255,0,0), 2)
+                #cv.rectangle(img, (int(w/2), 0), (w,h), (0,255,0), 2)
+            for code in decoded:
+                if code in ltest and not code in rtest:
+                    lr = -1
+                elif code not in ltest and code in rtest:
+                    lr = 1
+                else:
+                    lr = 0
+                if code in ttest and not code in btest:
+                    tb = 1
+                elif code not in ttest and code in btest:
+                    tb = -1
+                else:
+                    tb = 0
+                yield lr,tb,code
+                #if code in ltest and code not in rtest:
+                    #yield (0,0,int(w/2),h), (int(w/4),int(h/2)), code
+                #elif code not in ltest and code in rtest:
+                    #yield (int(w/2), 0, int(w/2),h), (int(3*w/4), int(h/2)), code
+                #else:
+                    #yield (0,0,w,h), (int(w/2), int(h/2)), code
 
 class NoClassifier(Classifier):
     def _handle(self, gray, img, bw, draw):
