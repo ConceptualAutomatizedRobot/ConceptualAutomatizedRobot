@@ -241,7 +241,7 @@ class Offloaded2(Thread):
         with Pool(processes=2) as pool:
             print('b')
             i = 0
-            for img, l in pool.map(self._class.handle, self._feed.iterate()):
+            for img, l in pool.imap(self._class.handle, self._feed.iterate()):
                 print('c', i)
                 i += 1
                 for lr,tb,code in l:
