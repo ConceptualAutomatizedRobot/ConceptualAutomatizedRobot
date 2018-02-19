@@ -4,6 +4,8 @@ from functools import reduce
 from camera import Camera
 import pyzbar.pyzbar as zbar
 import random
+from pebble import ProcessPool
+from threading import Thread
 
 class Classifier:
     def handle(self, img, draw=False):
@@ -205,6 +207,25 @@ class NoClassifier(Classifier):
             cv.rectangle(img, (0,0), (h,w), (255,0,0), 2)
             decoded = zbar.decode(bw, symbols=[zbar.ZBarSymbol.QRCODE])
         yield (0,0,h,w), (w/2,h/2), decoded
+
+class OffloadedClassifier(Thread):
+	def __init__(self, S, classifier, feed, target):
+		super(OffloadedClassifier, self).__init__()
+		self._S = S
+		self._class = classifier
+		self._feed = feed
+		self._target = target
+
+	def run(self):
+		pool = ProcessPool(max_workers=2)
+		fut = pool.map(self._class.handle, self.feed.iterate())
+
+		for img, l in future.result():
+			for lr,tb,code in l:
+				s = code[0].decode("utf-8")
+				if s == self._target:
+					self._S.notify(Event(self._S.E_XPOS, lr))
+					self._S.notify(Event(self._S.E_YPOS, tb))
 
 if __name__ == '__main__':
     from sys import argv, exit
