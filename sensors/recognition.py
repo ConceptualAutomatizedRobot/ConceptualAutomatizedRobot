@@ -249,6 +249,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--resolution', type=float)
     parser.add_argument('--fps', type=int)
+    parser.add_argument('--offload', action='store_true')
 
     args = parser.parse_args()
 
@@ -272,8 +273,13 @@ if __name__ == '__main__':
     else:
         exit(-2)
 
-    for x,y in cl.map(cam.iterate(), args.show):
-        if args.show:
-            cv.imshow('frame', x)
-        print(y)
-        cv.waitKey(1)
+	if not args.offload:
+		for x,y in cl.map(cam.iterate(), args.show):
+		    if args.show:
+		        cv.imshow('frame', x)
+		    print(y)
+		    cv.waitKey(1)
+	else:
+		off = OffloadedClassifier(None, cl, cam, "abc")
+		off.start()
+		off.join()
