@@ -6,6 +6,7 @@ import pyzbar.pyzbar as zbar
 import random
 from pebble import ProcessPool
 from threading import Thread
+from multiprocessing import Pool
 
 class Classifier:
     def handle(self, img, draw=False):
@@ -227,6 +228,30 @@ class OffloadedClassifier(Thread):
                     self._S.notify(Event(self._S.E_XPOS, lr))
                     self._S.notify(Event(self._S.E_YPOS, tb))
 
+class Offloaded2(Thread):
+    def __init__(self, S, classifier, feed, target):
+        super(Offloaded2, self).__init__()
+        self._S = S
+        self._class = classifier
+        self._feed = feed
+        self._target = target
+
+    def run(self):
+        print('a')
+        with Pool(processes=2) as pool:
+            print('b')
+            i = 0
+            for img, l in pool.map(self._class.handle, self._feed.iterate()):
+                print('c', i)
+                i += 1
+                for lr,tb,code in l:
+                    print('d')
+                    s = code[0].decode("utf-8")
+                    if s == self._target:
+                        self._S.notify(Event(self._S.E_XPOS, lr))
+                        self._S.notify(Event(self._S.E_YPOS, tb))
+
+
 if __name__ == '__main__':
     from sys import argv, exit
     import time
@@ -280,6 +305,6 @@ if __name__ == '__main__':
             print(y)
             cv.waitKey(1)
     else:
-        off = OffloadedClassifier(None, cl, cam, "abc")
+        off = Offloaded2(None, cl, cam, "abc")
         off.start()
         off.join()
