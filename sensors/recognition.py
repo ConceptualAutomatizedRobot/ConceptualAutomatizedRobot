@@ -4,7 +4,6 @@ from functools import reduce
 from camera import Camera
 import pyzbar.pyzbar as zbar
 import random
-from pebble import ProcessPool
 from threading import Thread
 from multiprocessing import Pool
 
@@ -210,25 +209,6 @@ class NoClassifier(Classifier):
         yield (0,0,h,w), (w/2,h/2), decoded
 
 class OffloadedClassifier(Thread):
-    def __init__(self, S, classifier, feed, target):
-        super(OffloadedClassifier, self).__init__()
-        self._S = S
-        self._class = classifier
-        self._feed = feed
-        self._target = target
-
-    def run(self):
-        pool = ProcessPool(max_workers=2)
-        fut = pool.map(self._class.handle, self._feed.iterate())
-
-        for img, l in fut.result():
-            for lr,tb,code in l:
-                s = code[0].decode("utf-8")
-                if s == self._target:
-                    self._S.notify(Event(self._S.E_XPOS, lr))
-                    self._S.notify(Event(self._S.E_YPOS, tb))
-
-class Offloaded2(Thread):
     def __init__(self, S, classifier, feed, target, draw=False):
         super(Offloaded2, self).__init__()
         self._S = S
@@ -238,18 +218,12 @@ class Offloaded2(Thread):
         self._draw = draw
 
     def run(self):
-        print('a')
         with Pool(processes=2) as pool:
-            print('b')
-            i = 0
             for img, l in pool.imap(self._class.handle, self._feed.iterate()):
-                print('c', i)
-                i += 1
                 if self._draw:
                     cv.imshow('frame', img)
                     cv.waitKey(1)
                 for lr,tb,code in l:
-                    print('d')
                     s = code[0].decode("utf-8")
                     if s == self._target:
                         self._S.notify(Event(self._S.E_XPOS, lr))
@@ -309,6 +283,6 @@ if __name__ == '__main__':
             print(y)
             cv.waitKey(1)
     else:
-        off = Offloaded2(None, cl, cam, "abc", args.show)
+        off = OffloadedClassifier(None, cl, cam, "abc", args.show)
         off.start()
         off.join()
