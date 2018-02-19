@@ -247,6 +247,7 @@ class Offloaded2(Thread):
                 i += 1
                 if self._draw:
                     cv.imshow('frame', img)
+                    cv.waitKey(1)
                 for lr,tb,code in l:
                     print('d')
                     s = code[0].decode("utf-8")
