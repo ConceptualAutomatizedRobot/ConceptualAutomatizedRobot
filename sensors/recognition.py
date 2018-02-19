@@ -218,7 +218,7 @@ class OffloadedClassifier(Thread):
 
     def run(self):
         pool = ProcessPool(max_workers=2)
-        fut = pool.map(self._class.handle, self.feed.iterate())
+        fut = pool.map(self._class.handle, self._feed.iterate())
 
         for img, l in future.result():
             for lr,tb,code in l:
