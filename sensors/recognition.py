@@ -229,12 +229,13 @@ class OffloadedClassifier(Thread):
                     self._S.notify(Event(self._S.E_YPOS, tb))
 
 class Offloaded2(Thread):
-    def __init__(self, S, classifier, feed, target):
+    def __init__(self, S, classifier, feed, target, draw=False):
         super(Offloaded2, self).__init__()
         self._S = S
         self._class = classifier
         self._feed = feed
         self._target = target
+        self._draw = draw
 
     def run(self):
         print('a')
@@ -244,6 +245,8 @@ class Offloaded2(Thread):
             for img, l in pool.imap(self._class.handle, self._feed.iterate()):
                 print('c', i)
                 i += 1
+                if self._draw:
+                    cv.imshow('frame', img)
                 for lr,tb,code in l:
                     print('d')
                     s = code[0].decode("utf-8")
@@ -305,6 +308,6 @@ if __name__ == '__main__':
             print(y)
             cv.waitKey(1)
     else:
-        off = Offloaded2(None, cl, cam, "abc")
+        off = Offloaded2(None, cl, cam, "abc", args.show)
         off.start()
         off.join()
