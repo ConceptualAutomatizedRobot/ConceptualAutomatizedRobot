@@ -162,8 +162,13 @@ class SlidingClassifier(Classifier):
 class SplittingClassifier(Classifier):
     def _handle(self, gray, img, bw, draw):
         decoded = zbar.decode(bw, symbols=[zbar.ZBarSymbol.QRCODE])
+        h,w = bw.shape
+        if draw:
+                cv.rectangle(img, (0,0), (int(w/2)-2,h), (255,0,0), 2)
+                cv.rectangle(img, (int(w/2)+2, 0), (w,h), (255,128,0), 2)
+                cv.rectangle(img, (4,4), (w-5, int(h/2)-2), (0,255,0), 2)
+                cv.rectangle(img, (4,int(h/2)+2), (w-5,h-5), (0,0,255), 2)
         if len(decoded) > 0:
-            h,w = bw.shape
             left = bw[:,:int(w/2)]
             right = bw[:,int(w/2):]
             top = bw[:int(h/2),:]
@@ -172,9 +177,6 @@ class SplittingClassifier(Classifier):
             rtest = zbar.decode(right, symbols=[zbar.ZBarSymbol.QRCODE])
             ttest = zbar.decode(top, symbols=[zbar.ZBarSymbol.QRCODE])
             btest = zbar.decode(bottom, symbols=[zbar.ZBarSymbol.QRCODE])
-            #if draw:
-                #cv.rectangle(img, (0,0), (int(w/2),h), (255,0,0), 2)
-                #cv.rectangle(img, (int(w/2), 0), (w,h), (0,255,0), 2)
             for code in decoded:
                 if code in ltest and not code in rtest:
                     lr = -1
