@@ -6,6 +6,11 @@ import pyzbar.pyzbar as zbar
 import random
 from threading import Thread
 from multiprocessing import Pool
+try:
+    from system.system import Event
+except:
+    try:
+        from system import Event
 
 class Classifier:
     def handle(self, img, draw=False):
