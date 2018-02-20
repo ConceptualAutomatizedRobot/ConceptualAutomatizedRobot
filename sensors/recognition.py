@@ -11,6 +11,8 @@ try:
 except:
     try:
         from system import Event
+    except:
+        pass
 
 class Classifier:
     def handle(self, img, draw=False):
