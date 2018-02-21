@@ -17,7 +17,7 @@ class CarDirection():
 				if line[0:8] == 'offset =':
 					self.offset = int(line[9:-1])
 		except:
-			print 'config error'
+			print('config error')
 		self.leftPWM += self.offset
 		self.homePWM += self.offset
 		self.rightPWM += self.offset
@@ -42,7 +42,16 @@ class CarDirection():
 	# ==========================================================================================
 
 	def turn(self, angle):
-		angle = Map(angle, 0, 255, self.leftPWM, self.rightPWM)
+		# angle = Map(angle, 0, 255, self.leftPWM, self.rightPWM)
+		if angle < 70:
+			angle = 70
+		elif angle > 110:
+			angle = 110
+
+		angle = Map(angle, 70, 110, self.leftPWM, self.rightPWM)
+
+		print(angle)
+
 		self.pwm.write(0, 0, angle)
 
 	def home(self):
@@ -50,4 +59,8 @@ class CarDirection():
 
 	def calibrate(self, x):
 		self.pwm.write(0, 0, 450+x)
+
+if __name__=="__main__":
+	cd = CarDirection()
+	cd.turn(100)
 

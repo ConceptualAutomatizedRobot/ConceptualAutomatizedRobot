@@ -1,9 +1,18 @@
 import RPi.GPIO as GPIO
 import time
+from threading import Thread
 
-class DistanceSensor():
+import sys
+sys.path.insert(0,"../system/")
+from system import System
+
+class DistanceSensor(Thread):
 	"""docstring for DistanceSensor"""
-	def __init__(self):
+	def __init__(self,system):
+		Thread.__init__(self)
+		self.on = True
+		self.system = system
+
 		GPIO.setmode(GPIO.BOARD)
 
 		self.Trig = 40
@@ -29,5 +38,14 @@ class DistanceSensor():
 
 		return distance
 
-	def cleanup(self):
+	def stop(self):
+		self.on = False
+
+	def run(self):
+		while self.on:
+			time.sleep(0.1)
+			d = self.getDistance()
+			self.system.notify({"type":System.E_DIST,"value":d})
+
+	def __del__(self):
 		GPIO.cleanup()

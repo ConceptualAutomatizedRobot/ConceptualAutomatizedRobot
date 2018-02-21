@@ -47,6 +47,7 @@ class Motor():
 			self.backward1 = 'False'
 		elif self.forward1 == 'False':
 			self.backward1 = 'True'
+			
 		for pin in self.pins:
 			GPIO.setup(pin, GPIO.OUT)   # Set all pins' mode as output
 
@@ -58,7 +59,7 @@ class Motor():
 	# ===========================================================================
 	def setSpeed(self, speed):
 		speed *= 40
-		print 'speed is: ', speed
+		print('speed is: ' + str(speed))
 		self.pwm.write(self.EN_M0, 0, speed)
 		self.pwm.write(self.EN_M1, 0, speed)
 
@@ -70,7 +71,7 @@ class Motor():
 			GPIO.output(self.Motor0_A, GPIO.HIGH)
 			GPIO.output(self.Motor0_B, GPIO.LOW)
 		else:
-			print 'Config Error'
+			print('Config Error')
 
 	def motor1(self, x):
 		if x == 'True':
@@ -118,8 +119,8 @@ class Motor():
 			elif direction == -1:  # Backward
 				self.backward()
 			else:
-				print 'Argument error! direction must be 1 or -1.'
+				print('Argument error! direction must be 1 or -1.')
 		elif status == 0: # Stop
 			self.stop()
 		else:
-			print 'Argument error! status must be 0 or 1.'
+			print('Argument error! status must be 0 or 1.')
