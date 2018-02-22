@@ -1,0 +1,13 @@
+390.0
+Traceback (most recent call last):
+  File "server.py", line 135, in <module>
+    Sergei = Server(st)
+  File "server.py", line 26, in __init__
+    self._server = SimpleXMLRPCServer(("",8028), allow_none = True, use_builtin_types=True)
+  File "/usr/lib/python3.5/xmlrpc/server.py", line 585, in __init__
+    socketserver.TCPServer.__init__(self, addr, requestHandler, bind_and_activate)
+  File "/usr/lib/python3.5/socketserver.py", line 440, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.5/socketserver.py", line 454, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use

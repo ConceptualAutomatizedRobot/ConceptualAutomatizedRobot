@@ -16,15 +16,19 @@ sys.path.insert(0,"../actuators/")
 from Motor import Motor
 from CarDirection import CarDirection
 from VideoDirection import VideoDirection
+sys.path.insert(0,"../sensors/")
+from recognition import SplittingClassifier, OffloadedClassifier
+from camera import Camera
+from event import Event
 
-class Event(object):
+# class Event(object):
 
-	def __init__(self,type,value):
-		self.type = type
-		self.value = value
+# 	def __init__(self,type,value):
+# 		self.type = type
+# 		self.value = value
 
-	def __str__(self):
-		return "type : "+str(self.type)+", value : "+str(self.value)
+# 	def __str__(self):
+# 		return "type : "+str(self.type)+", value : "+str(self.value)
 
 
 class System(Thread):
@@ -77,6 +81,9 @@ class System(Thread):
 		self._motor = Motor()
 		self._direction = CarDirection()
 		self._camera = VideoDirection()
+		self._camera_feed = Camera("/dev/video0", resolution=0.1)
+		self._classifier = SplittingClassifier()
+		self._off = OffloadedClassifier(self, self._classifier, self._camera_feed, "ConceptualAutomatizedRobot")
 
 		self._path = os.getcwd()
 		self._log = Logfile(self._path+"/logs")
@@ -87,6 +94,7 @@ class System(Thread):
 		self._on = True
 
 	def run(self):
+		self._off.start()
 		self.home()
 		
 		while self._on:
@@ -96,11 +104,13 @@ class System(Thread):
 
 		self._log.write("Car stop")
 		self._motor.stop()
+		self._off.stop()
 
 	def home(self):
 		print("Home")
 		self._direction.home()
-		self._camera.home()
+		self._camera.home_x_y()
+		time.sleep(0.5)
 
 	def parkour(self):
 		print("Parkour")
@@ -161,6 +171,7 @@ class System(Thread):
 
 	def notify(self, event):
 		self._vars[event.type] = event.value
+		print(self._vars[event.type])
 		self._log.write(event)
 
 		# target : tuple[name,img]
@@ -232,8 +243,8 @@ if __name__ == "__main__":
 
 	sylvain.start()
 
-	#time.sleep(1)
-	#sylvain.notify(Event(System.E_METH,System.F_FOLLOW))
+	time.sleep(1)
+	sylvain.notify(Event(System.E_METH,System.F_FOLLOW))
 	#time.sleep(1)
 	#sylvain.notify(Event(System.E_DIST,15))
 	#time.sleep(1)
@@ -242,11 +253,12 @@ if __name__ == "__main__":
 	#sylvain.notify(Event(System.E_DIST,30))
 	#time.sleep(1)
 
-
-	sylvain.motorForward()
-	time.sleep(0.2)
+	time.sleep(20)
+	# sylvain.motorForward()
+	# time.sleep(0.2)
 
 	sylvain.stop()
+
 	sylvain.join()
 
 	print("Stop")

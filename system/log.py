@@ -14,36 +14,35 @@ class Logfile():
 	###########################
 	def __init__(self,path):
 		self._path = path+"/log"+str(datetime.now().date())+"--"+str(datetime.now().time())
-		open(self._path,"w").close()
+
+		with open(self._path,"w") as file :
+			pass
 	
 	###########################
 	# Destructeur
 	###########################
 	def __del__(self):
-		file = open(self._path,"a")
-		file.write("Fin de session :: "+str(datetime.now().date())+"--"+str(datetime.now().time()))
-		file.close()
+		pass
+		# with open(self._path,"a") as file:
+		# 	file.write("Fin de session :: "+str(datetime.now().date())+"--"+str(datetime.now().time()))
 
 	###########################
 	# Ecriture dans les logs
 	# msg : message a écrire, enregistré sous la forme "date-heure :: msg"
 	###########################
 	def write(self,msg):
-		file = open(self._path,"a")
-		lm = str(datetime.now().date())+"--"+str(datetime.now().time())+" :: "+str(msg)
-		print(lm)
-		file.write(lm+'\n')
-		file.close()
+		with open(self._path,"a") as file:
+			lm = str(datetime.now().date())+"--"+str(datetime.now().time())+" :: "+str(msg)
+			print(lm)
+			file.write(lm+'\n')
 
 	###########################
 	# Lecture
 	# retourne le contenu du fichier de log courrant
 	###########################
 	def read(self):
-		file = open(self.path,"r")
-		r = file.read()
-		file.close()
-
+		with open(self.path,"r") as file:
+				r = file.read()
 		return r
 
 	###########################

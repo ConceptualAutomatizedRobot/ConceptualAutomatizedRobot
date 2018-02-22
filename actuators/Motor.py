@@ -80,6 +80,8 @@ class Motor():
 		elif x == 'False':
 			GPIO.output(self.Motor1_A, GPIO.HIGH)
 			GPIO.output(self.Motor1_B, GPIO.LOW)
+		else:
+			print('Config Error')
 
 	def burn(self):
 		self.motor0(self.forward0)

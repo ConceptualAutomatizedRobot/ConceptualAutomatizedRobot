@@ -6,13 +6,9 @@ import pyzbar.pyzbar as zbar
 import random
 from threading import Thread
 from multiprocessing import Pool
-try:
-    from system.system import Event
-except:
-    try:
-        from system import Event
-    except:
-        pass
+import sys
+sys.path.insert(0,"../system/")
+from event import Event
 
 class Classifier:
     def handle(self, img, draw=False):
@@ -216,25 +212,32 @@ class NoClassifier(Classifier):
         yield (0,0,h,w), (w/2,h/2), decoded
 
 class OffloadedClassifier(Thread):
-    def __init__(self, S, classifier, feed, target, draw=False):
-        super(Offloaded2, self).__init__()
+    def __init__(self, S, classifier, feed, target, draw=False, resolution=1.):
+        super(OffloadedClassifier, self).__init__()
         self._S = S
         self._class = classifier
         self._feed = feed
         self._target = target
         self._draw = draw
+        self._continue = True
+        self._resolution = resolution
 
     def run(self):
         with Pool(processes=2) as pool:
             for img, l in pool.imap(self._class.handle, self._feed.iterate()):
                 if self._draw:
-                    cv.imshow('frame', img)
+                    shape = tuple([self._resolution * x for x in img.shape])
+                    cv.imshow('frame', cv.resize(img, shape))
                     cv.waitKey(1)
                 for lr,tb,code in l:
                     s = code[0].decode("utf-8")
                     if s == self._target:
                         self._S.notify(Event(self._S.E_XPOS, lr))
                         self._S.notify(Event(self._S.E_YPOS, tb))
+                if not self._continue:
+                    return
+    def stop(self):
+        self._continue = False
 
 
 if __name__ == '__main__':
@@ -257,13 +260,13 @@ if __name__ == '__main__':
     classifiers.add_argument('--slide', action='store_const', const='slide', dest='classifier')
     classifiers.add_argument('--split', action='store_const', const='split', dest='classifier')
 
-    parser.add_argument('--resolution', type=float)
+    parser.add_argument('--resolution', type=float, default=1.)
     parser.add_argument('--fps', type=int)
     parser.add_argument('--offload', action='store_true')
 
     args = parser.parse_args()
 
-    cam = Camera(args.video, resolution=args.resolution, fps=args.fps)
+    cam = Camera(args.video, fps=args.fps)
     if args.classifier == 'body':
         cl = BodyClassifier()
     elif args.classifier == 'homo':
@@ -284,9 +287,12 @@ if __name__ == '__main__':
         exit(-2)
 
     if not args.offload:
-        for x,y in cl.map(cam.iterate(), args.show):
+        for img,y in cl.map(cam.iterate(), args.show):
             if args.show:
-                cv.imshow('frame', x)
+                dsize = None
+                dst = None
+                resized = cv.resize(img, dst, dsize, args.resolution, args.resolution)
+                cv.imshow('frame', resized)
             print(y)
             cv.waitKey(1)
     else:

@@ -8,6 +8,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 import sys
 sys.path.insert(0,"../system/")
 from system import System
+from event import Event
 
 class Server(Thread):
 
