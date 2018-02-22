@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Car Monitor</string>
+
+    <string name="title_activity_pilot">Mode Pilotage</string>
+    <string name="title_activity_suivi">Mode Suivi</string>
+    <string name="title_activity_parcours">Mode Parcours</string>
+    <string name="title_activity_choose_target">Choix de la cible</string>
+</resources>
