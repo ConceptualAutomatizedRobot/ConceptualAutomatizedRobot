@@ -12,6 +12,10 @@ git submodule init
 git submodule update
 ```
 
+OpenCV was added for image recognition.
+```
+pip install opencv-contrib-python
+```
 
 # Run
 
